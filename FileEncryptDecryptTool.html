@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Encryption/Decryption Tool</title>
+    <link rel="stylesheet" href="FileEncryptDecryptTool.css">
+</head>
+<body>
+    <div class="FileEncryptDecryptTool">
+        <h1>File Encryption/Decryption</h1>
+
+        <div class="input-group">
+            <label for="secretKey">Secret Key:</label>
+            <input type="password" id="secretKey" placeholder="Enter your secret key">
+        </div>
+
+        <div class="input-group">
+            <label for="fileInput">Select File:</label>
+            <input type="file" id="fileInput">
+            <span id="fileName">No file selected</span>
+        </div>
+
+        <div class="controls">
+            <button id="encryptButton">Encrypt</button>
+            <button id="decryptButton">Decrypt</button>
+        </div>
+
+        <div class="status-output">
+            <label for="status">Status:</label>
+            <textarea id="status" rows="4" readonly placeholder="Ready"></textarea>
+        </div>
+
+        <div class="download-link">
+            <a id="downloadLink" style="display: none;" download>Download Processed File</a>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileNameDisplay = document.getElementById('fileName');
+        const encryptButton = document.getElementById('encryptButton');
+        const decryptButton = document.getElementById('decryptButton');
+        const statusOutput = document.getElementById('status');
+        const downloadLink = document.getElementById('downloadLink');
+        const secretKeyInput = document.getElementById('secretKey');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                fileNameDisplay.textContent = this.files[0].name;
+            } else {
+                fileNameDisplay.textContent = 'No file selected';
+            }
+        });
+
+        encryptButton.addEventListener('click', function() {
+            const key = secretKeyInput.value;
+            const file = fileInput.files[0];
+
+            if (!key) {
+                updateStatus('Please enter a secret key.');
+                return;
+            }
+
+            if (!file) {
+                updateStatus('Please select a file to encrypt.');
+                return;
+            }
+
+            updateStatus('Encrypting file...');
+            // In a real application, you would handle the encryption logic here using JavaScript
+            // (e.g., using the Web Crypto API) or send the file and key to a backend for processing.
+            // For this HTML/CSS example, we'll simulate a delay and a download link.
+            simulateProcessing('encryption', file.name + '.encrypted');
+        });
+
+        decryptButton.addEventListener('click', function() {
+            const key = secretKeyInput.value;
+            const file = fileInput.files[0];
+
+            if (!key) {
+                updateStatus('Please enter the secret key.');
+                return;
+            }
+
+            if (!file) {
+                updateStatus('Please select a file to decrypt.');
+                return;
+            }
+
+            updateStatus('Decrypting file...');
+            // In a real application, you would handle the decryption logic here.
+            simulateProcessing('decryption', file.name.replace('.encrypted', ''));
+        });
+
+        function updateStatus(message) {
+            statusOutput.value = message;
+        }
+
+        function showDownloadLink(fileName) {
+            downloadLink.href = '#'; // Replace '#' with the actual URL of the processed file
+            downloadLink.download = fileName;
+            downloadLink.style.display = 'block';
+        }
+
+        // Simulate processing for the UI example
+        function simulateProcessing(operation, outputFileName) {
+            setTimeout(() => {
+                updateStatus(`File ${operation} complete.`);
+                showDownloadLink(outputFileName);
+            }, 2000); // Simulate a 2-second processing time
+        }
+    </script>
+</body>
+</html>
